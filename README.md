@@ -39,3 +39,10 @@
 |-------------|-------------|
 | Play / Pause| Click       |
 | Fullscreen  | Double click|
+
+
+### For developer
+
+``` bash
+$ compass watch
+```
