@@ -1,0 +1,49 @@
+@import "compass/css3/images";
+@import "compass/css3/user-interface";
+
+@mixin fill-parent() {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+
+.vp {
+	@include user-select("none");
+	position: relative;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: inline-block;
+	outline: none;
+}
+.vp:before {
+	@include fill-parent();
+	content: "";
+	opacity: 0.3;
+	background: no-repeat center center fixed;
+	background-size: cover;
+	z-index: -1;
+	// background-image: url("SRC");
+}
+.vp video {
+	margin: 0 auto;
+	height: 100%;
+	display: block;
+	outline: none;
+}
+
+.vp:-webkit-full-screen {
+	position: static;
+}
+.vp:-webkit-full-screen:before {
+	content: "bug";
+}
+.vp:-webkit-full-screen video{
+	@include fill-parent();
+	width: 100%;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+	display: none;
+}
