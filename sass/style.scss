@@ -1,3 +1,4 @@
+@import "compass/reset";
 @import "compass/css3/images";
 @import "compass/css3/user-interface";
 
@@ -8,7 +9,6 @@
 	left: 0;
 	right: 0;
 }
-
 
 .vp {
 	@include user-select("none");
