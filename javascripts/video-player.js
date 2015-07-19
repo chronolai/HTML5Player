@@ -13,143 +13,104 @@ HTMLElement.prototype.pseudoStyle = function(element,prop,value){
 	var _sheet = document.getElementById(_sheetId) || document.createElement('style');
 	_sheet.id = _sheetId;
 	var className = "pseudoStyle" + UID.getNew();
-	
 	_this.className +=  " "+className; 
-	
 	_sheet.innerHTML += " ."+className+":"+element+"{"+prop+":"+value+"}";
 	_head.appendChild(_sheet);
 	return this;
 };
 
 function VideoPlayer(selector, params) {
-	var video, target;
+	this.init = function() {
+		this.video = document.createElement("video");
+		this.video.src = params.url;
+		this.video.autoplay = true;
+		this.video.controls = true;
 
-	video = document.createElement("video");
-	video.src = params.url;
-	video.autoplay = true;
-	video.controls = true;
+		this.video.onmouseup = this.mouseManager.bind(this);
+		this.video.onkeydown = this.hotkeyManager.bind(this);
 
-	this.getVideo = function() {
-		return video;
-	};
-	this.getTarget = function() {
-		return target;
-	};
+		this.target = document.querySelector(selector);
+		this.target.appendChild(this.video);
+		this.target.className = 'vp';
+		this.target.tabIndex = "1";
+		this.target.style.width = params.width || '640px';
+		this.target.style.height = params.height || '360px';
+		this.target.pseudoStyle("before", "background-image",'url("'+params.cover+'")');
 
-	video.onmouseup = function() {
-		this.focus();
-		if (video.paused) {
-			video.play();
-		} else {
-			video.pause();
-		}
+		this.target.ondblclick = this.mouseManager.bind(this);
+		this.target.onkeydown = this.hotkeyManager.bind(this);
 	};
-	video.onkeydown = function(e) {
-		if (e.keyCode == 32) {
-			if (video.paused) {
-				video.play();
+	this.mouseManager = function(e) {
+		if (e.type == "mouseup") {
+			if (this.video.paused) {
+				this.video.play();
 			} else {
-				video.pause();
+				this.video.pause();
+			}
+		};
+		if (e.type == "dblclick") {
+			this.toggleFullscreen();
+		};
+	};
+	this.hotkeyManager = function(e) {
+		if (e.keyCode == 32) {
+			if (this.video.paused) {
+				this.video.play();
+			} else {
+				this.video.pause();
 			}	
 		};
 		if (e.keyCode >=37 && e.keyCode <= 40) {
-			if (!video.paused) {
-				video.pause();
-				video.play();
+			if (!this.video.paused) {
+				this.video.pause();
+				this.video.play();
 			};
 		};
 		if (e.keyCode == 37) {
-			video.currentTime -= 10;
+			this.video.currentTime -= 10;
 		};
 		if (e.keyCode == 39) {
-			video.currentTime += 10;
+			this.video.currentTime += 10;
 		};
 		if (e.keyCode == 38) {
-			if (video.volume + 0.1 > 1) {
-				video.volume = 1;
+			if (this.video.volume + 0.1 > 1) {
+				this.video.volume = 1;
 			} else {
-				video.volume += 0.1;
+				this.video.volume += 0.1;
 			};
 		};
 		if (e.keyCode == 40) {
-			if (video.volume - 0.1 < 0) {
-				video.volume = 0;
+			if (this.video.volume - 0.1 < 0) {
+				this.video.volume = 0;
 			} else {
-				video.volume -= 0.1;
+				this.video.volume -= 0.1;
 			};
 		};
 	};
-
-	target = document.querySelector(selector);
-	target.appendChild(video);
-	target.className = 'vp';
-	target.tabIndex = "1";
-	target.style.width = params.width || '640px';
-	target.style.height = params.height || '360px';
-	target.pseudoStyle("before", "background-image",'url("'+params.cover+'")');
-
-	target.ondblclick = function() {
-		toggleFullscreen();
-	};
-	target.onkeydown = function(e) {
-		if (e.keyCode == 32) {
-			if (video.paused) {
-				video.play();
-			} else {
-				video.pause();
-			}	
-		};
-		if (e.keyCode >=37 && e.keyCode <= 40) {
-			if (!video.paused) {
-				video.pause();
-				video.play();
-			};
-		};
-		if (e.keyCode == 37) {
-			video.currentTime -= 10;
-		};
-		if (e.keyCode == 39) {
-			video.currentTime += 10;
-		};
-		if (e.keyCode == 38) {
-			if (video.volume + 0.1 > 1) {
-				video.volume = 1;
-			} else {
-				video.volume += 0.1;
-			};
-		};
-		if (e.keyCode == 40) {
-			if (video.volume - 0.1 < 0) {
-				video.volume = 0;
-			} else {
-				video.volume -= 0.1;
-			};
-		};
-	};
-
-	var toggleFullscreen = function() {
-		if (!target.fullscreenElement &&
-		!target.mozFullScreenElement && !target.webkitFullscreenElement && !target.msFullscreenElement ) {
-			if (target.requestFullscreen) {
-				target.requestFullscreen();
-			} else if (target.msRequestFullscreen) {
-				target.msRequestFullscreen();
-			} else if (target.mozRequestFullScreen) {
-				target.mozRequestFullScreen();
-			} else if (target.webkitRequestFullscreen) {
-				target.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	this.toggleFullscreen = function() {
+		var element = this.target;
+		if (!element.fullscreenElement &&
+		!element.mozFullScreenElement && !element.webkitFullscreenElement && !element.msFullscreenElement ) {
+			if (element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if (element.msRequestFullscreen) {
+				element.msRequestFullscreen();
+			} else if (element.mozRequestFullScreen) {
+				element.mozRequestFullScreen();
+			} else if (element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
 			}
 		} else {
-			if (target.exitFullscreen) {
-				target.exitFullscreen();
-			} else if (target.msExitFullscreen) {
-				target.msExitFullscreen();
-			} else if (target.mozCancelFullScreen) {
-				target.mozCancelFullScreen();
-			} else if (target.webkitExitFullscreen) {
-				target.webkitExitFullscreen();
+			if (element.exitFullscreen) {
+				element.exitFullscreen();
+			} else if (element.msExitFullscreen) {
+				element.msExitFullscreen();
+			} else if (element.mozCancelFullScreen) {
+				element.mozCancelFullScreen();
+			} else if (element.webkitExitFullscreen) {
+				element.webkitExitFullscreen();
 			}
 		}
-
 	};
+	this.init();
 };
