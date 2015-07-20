@@ -46,3 +46,9 @@
 ``` bash
 $ compass watch
 ```
+
+### Todo list
+- [ ] add customize event listener => addEvents(event, callback[, object])
+- [ ] implement getVideo method to access video tag
+- [ ] implement controls panel
+- [ ] default theme & change theme
