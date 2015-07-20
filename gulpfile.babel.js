@@ -8,19 +8,66 @@ import {stream as wiredep} from 'wiredep';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('styles', () => {
+// gulp.task('styles', () => {
+//   return gulp.src('app/styles/*.scss')
+//     .pipe($.plumber())
+//     .pipe($.sourcemaps.init())
+//     .pipe($.sass.sync({
+//       outputStyle: 'expanded',
+//       precision: 10,
+//       includePaths: ['.']
+//     }).on('error', $.sass.logError))
+//     .pipe($.autoprefixer({browsers: ['last 1 version']}))
+//     .pipe($.sourcemaps.write())
+//     .pipe(gulp.dest('.tmp/styles'))
+//     .pipe(reload({stream: true}));
+// });
+
+// gulp.task('styles', () => {
+//   return gulp.src('app/styles/*.scss')
+//     .pipe($.plumber())
+//     .pipe($.sourcemaps.init())
+//     .pipe($.sass.sync({
+//       outputStyle: 'expanded',
+//       precision: 10,
+//       includePaths: ['.']
+//     }).on('error', $.sass.logError))
+//     .pipe($.autoprefixer({browsers: ['last 1 version']}))
+//     .pipe($.sourcemaps.write())
+//     .pipe(gulp.dest('.tmp/styles'))
+//     .pipe(reload({stream: true}));
+// });
+
+gulp.task('styles', function() {
+  // return gulp
+  // .src('./app/styles/*.scss')
+  // .pipe($.compass({
+  //   config_file: './config.rb',
+  //   css: './.tmp/styles',
+  //   sass: './app/styles',
+  //   debug: true,
+  //   // image: './app/images'
+  // }))
+
   return gulp.src('app/styles/*.scss')
-    .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-    .pipe($.sass.sync({
-      outputStyle: 'expanded',
-      precision: 10,
-      includePaths: ['.']
-    }).on('error', $.sass.logError))
-    .pipe($.autoprefixer({browsers: ['last 1 version']}))
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('.tmp/styles'))
-    .pipe(reload({stream: true}));
+  .pipe($.compass({
+    // Gulp-compass options and paths
+    css: '.tmp/styles',
+    sass: 'app/styles',
+    debug: true,
+  }))
+  .pipe(gulp.dest('.tmp'));
+  // .pipe(gulp.dest('.tmp/styles'))
+  // .pipe(reload({stream: true}));
+
+  // gulp.src('./src/*.scss')
+  //   .pipe(compass({
+  //     css: 'app/assets/css',
+  //     sass: 'app/assets/sass',
+  //     image: 'app/assets/images'
+  //   }))
+  //   .pipe(minifyCSS())
+  //   .pipe(gulp.dest('app/assets/temp'));
 });
 
 function lint(files, options) {
@@ -161,7 +208,8 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+// gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['html', 'images', 'fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
