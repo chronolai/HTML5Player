@@ -44,8 +44,10 @@
 ### For developer
 
 ``` bash
-$ compass watch
+$ npm install && gulp serve
 ```
+
+will start a local development server
 
 ### Todo list
 - [ ] add customize event listener => addEvents(event, callback[, object])
